@@ -11,7 +11,7 @@ Feature: FederationSharing
 		And I login with username "user2" and password "1234"
 
 	Scenario: check the dialogs at the receiving end of the remote share
-		And the folder "simple-folder" is shared with the remote user "user1@%base_url%"
+		When the folder "simple-folder" is shared with the remote user "user1@%base_url%"
 		And the folder "simple-empty-folder" is shared with the remote user "user1@%base_url%"
 		And I logout
 		And I login with username "user1" and password "1234"
