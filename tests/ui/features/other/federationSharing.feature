@@ -10,10 +10,12 @@ Feature: FederationSharing
 		And I logout
 		And I login with username "user2" and password "1234"
 
-	Scenario: share a file & folder with another federated user
+	Scenario: check the dialogs at the receiving end of the remote share
 		And the folder "simple-folder" is shared with the remote user "user1@%base_url%"
+		And the folder "simple-empty-folder" is shared with the remote user "user1@%base_url%"
 		And I logout
 		And I login with username "user1" and password "1234"
 		Then dialogs should be displayed
 		| title        | content                                                                    |
 		| Remote share | Do you want to add the remote share /simple-folder from user2@%base_url_without_scheme%/? |
+		| Remote share | Do you want to add the remote share /simple-empty-folder from user2@%base_url_without_scheme%/? |
