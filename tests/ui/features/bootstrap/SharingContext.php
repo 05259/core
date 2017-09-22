@@ -40,6 +40,7 @@ class SharingContext extends RawMinkContext implements Context {
 	private $regularUserNames;
 	private $regularGroupName;
 	private $regularGroupNames;
+	private $featureContext;
 
 	/**
 	 * SharingContext constructor.
@@ -51,17 +52,23 @@ class SharingContext extends RawMinkContext implements Context {
 	}
 
 	/**
-	 * @Given the file/folder :folder is shared with the user :user
+	 * @Given /^the (?:file|folder) "([^"]*)" is shared with the (?:(remote)\s)?user "([^"]*)"$/
 	 * @param string $folder
+	 * @param string $remote
 	 * @param string $user
 	 * @return void
 	 */
-	public function theFileFolderIsSharedWithTheUser($folder, $user) {
+	public function theFileFolderIsSharedWithTheUser($folder, $remote, $user) {
 		$this->filesPage->waitTillPageIsloaded($this->getSession());
 		$this->sharingDialog = $this->filesPage->openSharingDialog(
 			$folder, $this->getSession()
 		);
-		$this->sharingDialog->shareWithUser($user, $this->getSession());
+		$user = $this->featureContext->substituteInLineCodes($user);
+		if ($remote === "remote") {
+			$this->sharingDialog->shareWithRemoteUser($user, $this->getSession());
+		} else {
+			$this->sharingDialog->shareWithUser($user, $this->getSession());
+		}
 		$this->iCloseTheShareDialog();
 	}
 
@@ -290,10 +297,10 @@ class SharingContext extends RawMinkContext implements Context {
 		// Get the environment
 		$environment = $scope->getEnvironment();
 		// Get all the contexts you need in this context
-		$featureContext = $environment->getContext('FeatureContext');
-		$this->regularUserNames = $featureContext->getRegularUserNames();
-		$this->regularUserName = $featureContext->getRegularUserName();
-		$this->regularGroupNames = $featureContext->getRegularGroupNames();
-		$this->regularGroupName = $featureContext->getRegularGroupName();
+		$this->featureContext = $environment->getContext('FeatureContext');
+		$this->regularUserNames = $this->featureContext->getRegularUserNames();
+		$this->regularUserName = $this->featureContext->getRegularUserName();
+		$this->regularGroupNames = $this->featureContext->getRegularGroupNames();
+		$this->regularGroupName = $this->featureContext->getRegularGroupName();
 	}
 }

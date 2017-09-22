@@ -51,6 +51,12 @@ fi
 
 start_php_dev_server $SRV_HOST_NAME:$SRV_HOST_PORT primary
 
+if [ ! -z "$FED_SRV_HOST_NAME" ] && [ ! -z "$FED_SRV_HOST_PORT" ]
+then
+	start_php_dev_server $FED_SRV_HOST_NAME:$FED_SRV_HOST_PORT FED
+fi
+
+
 if [ ! -z "$IPV4_HOST_NAME" ] && [ "$SRV_HOST_NAME" != "$IPV4_HOST_NAME" ]
 then
 	start_php_dev_server $IPV4_HOST_NAME:$SRV_HOST_PORT IPv4
